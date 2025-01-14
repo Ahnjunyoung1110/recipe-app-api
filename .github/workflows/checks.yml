@@ -1,0 +1,23 @@
+/// github 작동 설정
+
+--- ///yml 파일임을 의미
+name: Checks
+
+on: [push] //푸쉬할때마다
+
+jobs:
+  test-lint: //작업
+    name: Test and Lint //작업명
+    runs-on: ubuntu-20.04 //환경
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1 //도커에 로그인 하는 기능
+        with: //사용할 변수
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Test
+        run: docker compose run --rm app sh -c "python manage.py test"
+      - name: Lint
+        run: docker compose run --rm app sh -c "flake8"
