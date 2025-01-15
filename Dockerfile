@@ -12,11 +12,17 @@ EXPOSE 8000
 ARG DEV=false
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client &&\ 
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev &&\
+    #위 3개의 패키지를 tmp-build-deps 라는 이름으로 그룹화
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ $DEV = "true" ]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
     rm -rf /tmp && \
+    apk del .tmp-build-deps && \
+    # 그룹화화 한 애들 삭제
     adduser \
         --disabled-password \
         --no-create-home \
