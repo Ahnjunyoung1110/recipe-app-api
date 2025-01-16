@@ -29,7 +29,7 @@ class CommandTests(SimpleTestCase):
         #  check가 한번만 호출되었는지 검증
 
     @patch('time.sleep')
-    #sleep호출을 방지하기 위해서 patch로 가져옴
+    # sleep호출을 방지하기 위해서 patch로 가져옴
     def test_wait_for_db_delay(self, patched_sleep, patched_check):
         #  가까운 patch일수록 매개변수를 앞에다 적용
         #  time.sleep이 patched_sleep, 저 위에 코어 커맨드가 patched_check로 적용용
