@@ -11,7 +11,9 @@ services:
       - ./app:/app #호스트의 ./app디렉토리를 컨테이너의 /app디렉토리에 연결
       #애플리케이션 컨테이너 시작시 실행할 명령어. 서버열기인듯
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"  
+      sh -c "python manage.py wait_for_db &&
+       python manage.py migrate &&
+       python manage.py runserver 0.0.0.0:8000"  
     environment: #컨테이너 내부에서 사용할 환경변수
       - DB_HOST=db
       - DB_NAME=devdb
@@ -29,6 +31,6 @@ services:
       - POSTGRES_PASSWORD=changeme
   
     
-volumes:
+volumes: #외부 저장소 정의
   dev-db-data: 
 
