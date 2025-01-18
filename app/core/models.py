@@ -14,8 +14,19 @@ class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_field):
         # 새로운 유저 만드는 함수 extra_field로 확장성 첨가
-        user = self.model(email=email, **extra_field)
+        if not email:
+            raise ValueError('이메일이 입력되어 있지 않습니다.')
+        user = self.model(email=self.normalize_email(email), **extra_field)
         user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, email, password):
+        # superuser 생성
+        user = self.create_user(email, password)
+        user.is_superuser = True
+        user.is_staff = True
         user.save(using=self._db)
 
         return user
